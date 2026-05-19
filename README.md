@@ -83,3 +83,25 @@ Example client output:
 127.0.0.1:54321: hello from client one
 127.0.0.1:54322: hello from client two
 ```
+
+## Tutorial 3: WebChat using Yew
+
+### Experiment 3.1: Original code
+
+I added the original YewChat client from the tutorial's `websockets-part2` branch into `webchat-yew/`, and the original Node websocket server into `simple-websocket-server/`. The Yew client follows the blog structure: login route, chat route, websocket service, and event bus service. The original server uses Node/TypeScript and listens on port `8080`.
+
+Run the original server:
+
+```bash
+cd simple-websocket-server
+npm i
+npm start
+```
+
+Run the original Yew client:
+
+```bash
+cd webchat-yew
+npm i
+npm start
+```
