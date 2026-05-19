@@ -109,3 +109,9 @@ npm start
 ### Experiment 3.2: Be Creative!
 
 I customized the Yew web client by changing the login screen into a branded `Rafi's WebChat` entry view, adding a more polished chat header, changing the sidebar into an online-crew panel, and adding an empty-room state for the chat area. I kept the websocket flow unchanged, so the creative change is focused on the client experience instead of the networking logic.
+
+### Bonus: Rust Websocket server for YewChat!
+
+I modified the Rust websocket server in `broadcast-chat/src/bin/server.rs` so it supports the YewChat JSON protocol from Tutorial 3. The Yew client sends serialized text messages like `{"messageType":"register","data":"Rafi"}` and `{"messageType":"message","data":"hello"}`. The Rust server now deserializes that text, stores registered users, broadcasts the `users` list, and sends chat messages back as serialized JSON containing `from`, `message`, and `time`.
+
+The server still accepts simple text from the terminal client, so Tutorial 2 remains usable. I prefer the Rust server version because it keeps the websocket logic in the same language as the async tutorial, makes the broadcast/channel flow explicit, and lets the Yew client talk to a Rust backend without changing the client URL.
