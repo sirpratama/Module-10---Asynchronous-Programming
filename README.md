@@ -21,3 +21,14 @@ Rafi's Komputer: howdy!
 Rafi's Komputer: done!
 ```
 
+### Experiment 1.2: Understanding how it works.
+
+I added `println!("Rafi's Komputer: hey hey");` right after `spawner.spawn(...)`. The line is outside the async block, so it runs immediately while the async task has only been queued. When the executor starts, it polls the spawned task, prints `howdy!`, reaches `TimerFuture.await`, and returns `Poll::Pending`. After the timer thread sleeps for two seconds and wakes the task, the executor polls it again and the task prints `done!`.
+
+Captured output:
+
+```text
+Rafi's Komputer: hey hey
+Rafi's Komputer: howdy!
+Rafi's Komputer: done!
+```

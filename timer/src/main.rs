@@ -124,6 +124,7 @@ fn main() {
         TimerFuture::new(Duration::new(2, 0)).await;
         println!("Rafi's Komputer: done!");
     });
+    println!("Rafi's Komputer: hey hey");
 
     drop(spawner);
 
