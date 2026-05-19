@@ -48,3 +48,23 @@ Task 2: Rafi's Komputer says done!
 Task 1: Rafi's Komputer says done!
 Task 3: Rafi's Komputer says done!
 ```
+
+## Tutorial 2: Broadcast Chat
+
+### Experiment 2.1: Original code, and how it run
+
+The broadcast chat follows the Comprehensive Rust two-binary structure. The server accepts websocket connections on `127.0.0.1:2000`, receives text messages from any client, and broadcasts each message to all connected clients. The client concurrently reads terminal input and websocket messages with `tokio::select!`.
+
+Run the server:
+
+```bash
+cargo run -p broadcast-chat --bin server
+```
+
+Run three clients in separate terminals:
+
+```bash
+cargo run -p broadcast-chat --bin client
+```
+
+When a client types a message, the server receives it through that client's websocket stream, sends it through a Tokio broadcast channel, and every subscribed client receives and prints the text.
