@@ -72,3 +72,14 @@ When a client types a message, the server receives it through that client's webs
 ### Experiment 2.2: Modifying port
 
 I changed the websocket port to `8080`. The server side is defined in `broadcast-chat/src/bin/server.rs` by `TcpListener::bind("127.0.0.1:8080")`, and the client side is defined in `broadcast-chat/src/bin/client.rs` by `Uri::from_static("ws://127.0.0.1:8080")`. Both sides need to be changed because websocket communication needs one process listening on the same address that the other process connects to.
+
+### Experiment 2.3: Small changes, add IP and Port
+
+I changed the server so it formats each received message as `{addr}: {text}` before sending it through the broadcast channel. The `addr` value comes from `listener.accept()`, so it contains the sender's IP address and temporary client port. This makes the message flow easier to observe because all clients can see which connection produced each message, even though the clients do not have usernames yet.
+
+Example client output:
+
+```text
+127.0.0.1:54321: hello from client one
+127.0.0.1:54322: hello from client two
+```

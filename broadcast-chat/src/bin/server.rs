@@ -21,8 +21,9 @@ async fn handle_connection(
             Some(msg) = ws_stream.next() => {
                 let msg = msg?;
                 if let Some(text) = msg.as_text() {
-                    println!("{addr}: {text}");
-                    bcast_tx.send(text.to_string())?;
+                    let message = format!("{addr}: {text}");
+                    println!("{message}");
+                    bcast_tx.send(message)?;
                 }
             }
             msg = bcast_rx.recv() => {
