@@ -105,3 +105,7 @@ cd webchat-yew
 npm i
 npm start
 ```
+
+### Experiment 3.2: Be Creative!
+
+I customized the Yew web client by changing the login screen into a branded `Rafi's WebChat` entry view, adding a more polished chat header, changing the sidebar into an online-crew panel, and adding an empty-room state for the chat area. I kept the websocket flow unchanged, so the creative change is focused on the client experience instead of the networking logic.

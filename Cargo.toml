@@ -1,4 +1,4 @@
 [workspace]
 members = ["broadcast-chat", "timer"]
+exclude = ["webchat-yew"]
 resolver = "3"
-

@@ -46,6 +46,7 @@ pub struct Chat {
     wss: WebsocketService,
     messages: Vec<MessageData>,
 }
+
 impl Component for Chat {
     type Message = Msg;
     type Properties = ();
@@ -64,10 +65,11 @@ impl Component for Chat {
             data_array: None,
         };
 
-        if let Ok(_) = wss
+        if wss
             .tx
             .clone()
             .try_send(serde_json::to_string(&message).unwrap())
+            .is_ok()
         {
             log::debug!("message sent successfully");
         }
@@ -99,17 +101,15 @@ impl Component for Chat {
                                 .into(),
                             })
                             .collect();
-                        return true;
+                        true
                     }
                     MsgTypes::Message => {
                         let message_data: MessageData =
                             serde_json::from_str(&msg.data.unwrap()).unwrap();
                         self.messages.push(message_data);
-                        return true;
+                        true
                     }
-                    _ => {
-                        return false;
-                    }
+                    _ => false,
                 }
             }
             Msg::SubmitMessage => {
@@ -139,13 +139,17 @@ impl Component for Chat {
         let submit = ctx.link().callback(|_| Msg::SubmitMessage);
 
         html! {
-            <div class="flex w-screen">
-                <div class="flex-none w-56 h-screen bg-gray-100">
-                    <div class="text-xl p-3">{"Users"}</div>
+            <div class="flex w-screen bg-slate-50">
+                <div class="flex-none w-72 h-screen bg-slate-950 text-white">
+                    <div class="p-5 border-b border-slate-800">
+                        <div class="text-xl font-bold">{"Rafi's WebChat"}</div>
+                        <div class="text-xs text-slate-400 mt-1">{"Async lounge"}</div>
+                    </div>
+                    <div class="text-sm uppercase tracking-wider text-slate-400 p-5 pb-2">{"Online crew"}</div>
                     {
                         self.users.clone().iter().map(|u| {
                             html!{
-                                <div class="flex m-3 bg-white rounded-lg p-2">
+                                <div class="flex mx-4 my-3 bg-slate-900 border border-slate-800 rounded-lg p-2">
                                     <div>
                                         <img class="w-12 h-12 rounded-full" src={u.avatar.clone()} alt="avatar"/>
                                     </div>
@@ -153,29 +157,47 @@ impl Component for Chat {
                                         <div class="flex text-xs justify-between">
                                             <div>{u.name.clone()}</div>
                                         </div>
-                                        <div class="text-xs text-gray-400">
-                                            {"Hi there!"}
+                                        <div class="text-xs text-emerald-300">
+                                            {"Ready"}
                                         </div>
                                     </div>
                                 </div>
                             }
                         }).collect::<Html>()
                     }
+                    <div class="mx-4 mt-6 p-4 border border-slate-800 rounded-lg bg-slate-900">
+                        <div class="text-sm font-semibold text-amber-300">{"Creative note"}</div>
+                        <p class="text-xs text-slate-400 mt-2 leading-5">{"Messages that end with .gif render as images, while plain text stays compact."}</p>
+                    </div>
                 </div>
                 <div class="grow h-screen flex flex-col">
-                    <div class="w-full h-14 border-b-2 border-gray-300"><div class="text-xl p-3">{"💬 Chat!"}</div></div>
-                    <div class="w-full grow overflow-auto border-b-2 border-gray-300">
+                    <div class="w-full h-16 border-b border-slate-200 bg-white flex items-center justify-between px-6">
+                        <div>
+                            <div class="text-xl font-bold text-slate-900">{"Chat"}</div>
+                            <div class="text-xs text-slate-500">{"127.0.0.1:8080"}</div>
+                        </div>
+                        <div class="text-xs bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full">{"Connected"}</div>
+                    </div>
+                    <div class="w-full grow overflow-auto border-b border-slate-200 bg-white">
+                        if self.messages.is_empty() {
+                            <div class="h-full flex items-center justify-center text-slate-400">
+                                <div class="text-center">
+                                    <div class="text-2xl font-bold text-slate-600">{"No messages yet"}</div>
+                                    <div class="text-sm mt-2">{"The room is quiet."}</div>
+                                </div>
+                            </div>
+                        }
                         {
                             self.messages.iter().map(|m| {
                                 let user = self.users.iter().find(|u| u.name == m.from).unwrap();
                                 html!{
-                                    <div class="flex items-end w-3/6 bg-gray-100 m-8 rounded-tl-lg rounded-tr-lg rounded-br-lg ">
+                                    <div class="flex items-end w-3/6 bg-slate-100 m-8 rounded-tl-lg rounded-tr-lg rounded-br-lg border border-slate-200">
                                         <img class="w-8 h-8 rounded-full m-3" src={user.avatar.clone()} alt="avatar"/>
                                         <div class="p-3">
-                                            <div class="text-sm">
+                                            <div class="text-sm font-semibold text-slate-800">
                                                 {m.from.clone()}
                                             </div>
-                                            <div class="text-xs text-gray-500">
+                                            <div class="text-xs text-slate-500">
                                                 if m.message.ends_with(".gif") {
                                                     <img class="mt-3" src={m.message.clone()}/>
                                                 } else {
@@ -187,11 +209,10 @@ impl Component for Chat {
                                 }
                             }).collect::<Html>()
                         }
-
                     </div>
-                    <div class="w-full h-14 flex px-3 items-center">
-                        <input ref={self.chat_input.clone()} type="text" placeholder="Message" class="block w-full py-2 pl-4 mx-3 bg-gray-100 rounded-full outline-none focus:text-gray-700" name="message" required=true />
-                        <button onclick={submit} class="p-3 shadow-sm bg-blue-600 w-10 h-10 rounded-full flex justify-center items-center color-white">
+                    <div class="w-full h-16 flex px-3 items-center bg-slate-50">
+                        <input ref={self.chat_input.clone()} type="text" placeholder="Message" class="block w-full py-3 pl-4 mx-3 bg-white border border-slate-200 rounded-full outline-none focus:text-slate-700 focus:border-emerald-400" name="message" required=true />
+                        <button onclick={submit} class="p-3 shadow-sm bg-emerald-500 hover:bg-emerald-400 w-11 h-11 rounded-full flex justify-center items-center color-white">
                             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="fill-white">
                                 <path d="M0 0h24v24H0z" fill="none"></path><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
                             </svg>
