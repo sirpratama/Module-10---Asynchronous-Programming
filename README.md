@@ -53,7 +53,7 @@ Task 3: Rafi's Komputer says done!
 
 ### Experiment 2.1: Original code, and how it run
 
-The broadcast chat follows the Comprehensive Rust two-binary structure. The server accepts websocket connections on `127.0.0.1:2000`, receives text messages from any client, and broadcasts each message to all connected clients. The client concurrently reads terminal input and websocket messages with `tokio::select!`.
+The broadcast chat follows the Comprehensive Rust two-binary structure. The server accepts websocket connections, receives text messages from any client, and broadcasts each message to all connected clients. The client concurrently reads terminal input and websocket messages with `tokio::select!`.
 
 Run the server:
 
@@ -68,3 +68,7 @@ cargo run -p broadcast-chat --bin client
 ```
 
 When a client types a message, the server receives it through that client's websocket stream, sends it through a Tokio broadcast channel, and every subscribed client receives and prints the text.
+
+### Experiment 2.2: Modifying port
+
+I changed the websocket port to `8080`. The server side is defined in `broadcast-chat/src/bin/server.rs` by `TcpListener::bind("127.0.0.1:8080")`, and the client side is defined in `broadcast-chat/src/bin/client.rs` by `Uri::from_static("ws://127.0.0.1:8080")`. Both sides need to be changed because websocket communication needs one process listening on the same address that the other process connects to.
