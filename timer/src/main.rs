@@ -120,9 +120,19 @@ fn main() {
     let (executor, spawner) = new_executor_and_spawner();
 
     spawner.spawn(async {
-        println!("Rafi's Komputer: howdy!");
+        println!("Task 1: Rafi's Komputer says howdy!");
         TimerFuture::new(Duration::new(2, 0)).await;
-        println!("Rafi's Komputer: done!");
+        println!("Task 1: Rafi's Komputer says done!");
+    });
+    spawner.spawn(async {
+        println!("Task 2: Rafi's Komputer says howdy!");
+        TimerFuture::new(Duration::new(1, 0)).await;
+        println!("Task 2: Rafi's Komputer says done!");
+    });
+    spawner.spawn(async {
+        println!("Task 3: Rafi's Komputer says howdy!");
+        TimerFuture::new(Duration::new(3, 0)).await;
+        println!("Task 3: Rafi's Komputer says done!");
     });
     println!("Rafi's Komputer: hey hey");
 

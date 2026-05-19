@@ -32,3 +32,19 @@ Rafi's Komputer: hey hey
 Rafi's Komputer: howdy!
 Rafi's Komputer: done!
 ```
+
+### Experiment 1.3: Multiple Spawn and removing drop
+
+I added three spawned async tasks with different timer durations. `spawn` packages a future as a task and sends it to the executor queue. The `spawner` owns the sending side of that queue, while the `executor` owns the receiving side and polls queued tasks. `drop(spawner)` closes the original sender after all tasks have been submitted, so the executor can stop once every cloned task sender is also gone. If `drop(spawner)` is removed, the executor keeps waiting for more work even after all printed tasks are finished, because the channel is still open.
+
+Captured output:
+
+```text
+Rafi's Komputer: hey hey
+Task 1: Rafi's Komputer says howdy!
+Task 2: Rafi's Komputer says howdy!
+Task 3: Rafi's Komputer says howdy!
+Task 2: Rafi's Komputer says done!
+Task 1: Rafi's Komputer says done!
+Task 3: Rafi's Komputer says done!
+```
