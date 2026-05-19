@@ -21,6 +21,8 @@ Rafi's Komputer: howdy!
 Rafi's Komputer: done!
 ```
 
+![](<public/images/Screenshot 2026-05-19 192153.png>)
+
 ### Experiment 1.2: Understanding how it works.
 
 I added `println!("Rafi's Komputer: hey hey");` right after `spawner.spawn(...)`. The line is outside the async block, so it runs immediately while the async task has only been queued. When the executor starts, it polls the spawned task, prints `howdy!`, reaches `TimerFuture.await`, and returns `Poll::Pending`. After the timer thread sleeps for two seconds and wakes the task, the executor polls it again and the task prints `done!`.
@@ -32,6 +34,8 @@ Rafi's Komputer: hey hey
 Rafi's Komputer: howdy!
 Rafi's Komputer: done!
 ```
+
+![](<public/images/Screenshot 2026-05-19 192211.png>)
 
 ### Experiment 1.3: Multiple Spawn and removing drop
 
@@ -48,6 +52,8 @@ Task 2: Rafi's Komputer says done!
 Task 1: Rafi's Komputer says done!
 Task 3: Rafi's Komputer says done!
 ```
+
+![](<public/images/Screenshot 2026-05-19 192241.png>)
 
 ## Tutorial 2: Broadcast Chat
 
@@ -84,6 +90,22 @@ Example client output:
 127.0.0.1:54322: hello from client two
 ```
 
+Server terminal (showing connections and broadcast messages):
+
+![](<public/images/Screenshot 2026-05-19 192544.png>)
+
+Client terminal 2:
+
+![](<public/images/Screenshot 2026-05-19 192552.png>)
+
+Client terminal 3:
+
+![](<public/images/Screenshot 2026-05-19 192559.png>)
+
+Client terminal 4:
+
+![](<public/images/Screenshot 2026-05-19 192608.png>)
+
 ## Tutorial 3: WebChat using Yew
 
 ### Experiment 3.1: Original code
@@ -106,9 +128,19 @@ npm i
 npm start
 ```
 
+Node websocket server running:
+
+![](<public/images/Screenshot 2026-05-19 195924.png>)
+
+Yew client webpack build:
+
+![](<public/images/Screenshot 2026-05-19 195931.png>)
+
 ### Experiment 3.2: Be Creative!
 
 I customized the Yew web client by changing the login screen into a branded `Rafi's WebChat` entry view, adding a more polished chat header, changing the sidebar into an online-crew panel, and adding an empty-room state for the chat area. I kept the websocket flow unchanged, so the creative change is focused on the client experience instead of the networking logic.
+
+![](<public/images/Screenshot 2026-05-19 195904.png>)
 
 ### Bonus: Rust Websocket server for YewChat!
 
